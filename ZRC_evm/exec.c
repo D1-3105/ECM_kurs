@@ -387,9 +387,11 @@ void perform_floats() {
     timeit(mul_floating, "MUL OF FLOATING POINT", 3, NumberOfElementsArray, x_f, y_f);
     timeit(div_floating, "DIV OF FLOATING POINT", 3, NumberOfElementsArray, x_f, y_f);
     // unar
-    timeit(sqrt_floating, "SQRT OF FLOATING POINT", 2, NumberOfElementsArray, x_f);
-    timeit(l2_floating, "LOG2 OF FLOATING POINT", 2, NumberOfElementsArray, x_f);
-    timeit(ln_floating, "LN OF FLOATING POINT", 2, NumberOfElementsArray, x_f);
+    printf(UnarOperationString);
+    timeit(sqrt_floating, "FSQRT REG", 2, NumberOfElementsArray, x_f);
+    timeit(l2_floating, "FYL2X REG", 2, NumberOfElementsArray, x_f);
+    timeit(ln_floating, "LN REG", 2, NumberOfElementsArray, x_f);
+    timeit(pow2_floating, "F2XM1 REG", 2, NumberOfElementsArray, x_f);
     // trigan
     timeit(sin_floating, "SIN OF FLOATING POINT", 2, NumberOfElementsArray, x_f);
     timeit(tan_floating, "TAN OF FLOATING POINT", 2, NumberOfElementsArray, x_f);
@@ -419,27 +421,61 @@ void perform_floats() {
     }
 
     // binar
-    timeit(add_double, "ADD OF DOUBLE", 3, NumberOfElementsArray, x_d, y_d);
-    timeit(sub_double, "SUB OF DOUBLE", 3, NumberOfElementsArray, x_d, y_d);
-    timeit(mul_double, "MUL OF DOUBLE", 3, NumberOfElementsArray, x_d, y_d);
-    timeit(div_double, "DIV OF DOUBLE", 3, NumberOfElementsArray, x_d, y_d);
+
+    printf(BinaryOperationString);
+    timeit(add_double, "FADD REG, REG", 3, NumberOfElementsArray, x_d, y_d);
+    timeit(sub_double, "FSUB REG, REG", 3, NumberOfElementsArray, x_d, y_d);
+    timeit(mul_double, "FMUL REG, REG", 3, NumberOfElementsArray, x_d, y_d);
+    timeit(div_double, "FDIV REG, REG", 3, NumberOfElementsArray, x_d, y_d);
+
     // unar
-    timeit(sqrt_double, "SQRT OF DOUBLE", 2, NumberOfElementsArray, x_d);
-    timeit(l2_double, "LOG2 OF DOUBLE", 2, NumberOfElementsArray, x_d);
-    timeit(ln_double, "LN OF DOUBLE", 2, NumberOfElementsArray, x_d);
+
+    printf(UnarOperationString);
+    timeit(sqrt_double, "FSQRT REG, REG", 2, NumberOfElementsArray, x_d);
+    timeit(l2_double, "FYL2X REG", 2, NumberOfElementsArray, x_d);
+    timeit(ln_double, "LN REG", 2, NumberOfElementsArray, x_d);
+    timeit(pow2_double, "F2XM1 REG", 2, NumberOfElementsArray, x_d);
     // trigan
-    timeit(sin_double, "SIN OF DOUBLE", 2, NumberOfElementsArray, x_d);
-    timeit(tan_double, "TAN OF DOUBLE", 2, NumberOfElementsArray, x_d);
-    timeit(atan_double, "ATAN OF DOUBLE", 2, NumberOfElementsArray, x_d);
-    //mem
-    printf("double MEMORY [Double 64 bit]\n");
-    timeit(add_mem_double, "ADD OF DOUBLE", 3, NumberOfElementsArray, x_d, y_d);
-    timeit(sub_mem_double, "SUB OF DOUBLE", 3, NumberOfElementsArray, x_d, y_d);
-    timeit(mul_mem_double, "MUL OF DOUBLE", 3, NumberOfElementsArray, x_d, y_d);
-    timeit(div_mem_double, "DIV OF DOUBLE", 3, NumberOfElementsArray, x_d, y_d);
+
+    printf(TriganometricOperationString);
+    timeit(sin_double, "FSIN REG", 2, NumberOfElementsArray, x_d);
+    timeit(tan_double, "FPTAN REG", 2, NumberOfElementsArray, x_d);
+    timeit(atan_double, "FPATAN REG", 2, NumberOfElementsArray, x_d);
 
     free(x_d);
     free(y_d);
+}
+
+
+void perform_double_mem()
+{
+    double64_t* x_d, * y_d;
+    x_d = (double64_t*)malloc(NumberOfElementsArray * sizeof(double64_t));
+    y_d = (double64_t*)malloc(NumberOfElementsArray * sizeof(double64_t));
+
+    for (int i = 0; i < NumberOfElementsArray; i++) {
+        x_d[i] = rand();
+        y_d[i] = rand();
+    }
+    timeit(add_mem_double, "FADD REG, MEM", 3, NumberOfElementsArray, x_d, y_d);
+    timeit(sub_mem_double, "FSUB REG, MEM", 3, NumberOfElementsArray, x_d, y_d);
+    timeit(mul_mem_double, "FMUL REG, MEM", 3, NumberOfElementsArray, x_d, y_d);
+    timeit(div_mem_double, "FDIV REG, MEM", 3, NumberOfElementsArray, x_d, y_d);
+
+    free(x_d);
+    free(y_d);
+}
+
+
+void perform_floats() {
+    printf(DelimString);
+    printf("\tFLOAT 32 bit\n");
+    perform_float_reg();
+    perform_float_mem();
+    printf(DelimString);
+    printf("\tDOUBLE 64 bit\n");
+    perform_double_reg();
+    perform_double_mem();
 }
 
 
